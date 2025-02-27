@@ -1,5 +1,5 @@
 import { BrowserContext, chromium, Locator, Page } from "playwright";
-import { Position } from "./schema.ts";
+import { Position, Location } from "./schema.ts";
 
 
 async function waitForData(page: Page) {
@@ -81,7 +81,7 @@ async function isLastPage(nextPageButton: Locator): Promise<boolean> {
         return isNaN(parsed) ? defaultValue : parsed;
       }
     
-      function parseShowPinFunction(onclickAttr: string): any {
+      function parseShowPinFunction(onclickAttr: string): Location | undefined {
         try {
           const showPinRegex = /ShowPin\(([^,]+),([^,]+),["']([^"']+)["'],["']([^"']+)["'],["']([^"']+)["'],["']([^"']+)["'],["']([^"']+)["'],["']([^"']+)["']\)/;
           const match = onclickAttr.match(showPinRegex);
