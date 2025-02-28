@@ -1,6 +1,6 @@
 import { BrowserContext, chromium, Locator, Page } from "playwright";
 import { Contact, Location, Position } from "./schema.ts";
-import config from './config.ts';
+import config from "./config.ts";
 
 async function waitForData(page: Page) {
   await page.waitForSelector(".loading-screen", { state: "hidden" });
@@ -48,6 +48,21 @@ async function getCurrentPageNumber(page: Page): Promise<number> {
 async function isLastPage(nextPageButton: Locator): Promise<boolean> {
   return (await nextPageButton.getAttribute("class"))!.split(" ")
     .includes("disabled");
+}
+
+/**
+ * Checks if a position object has any meaningful data
+ */
+function isEmptyPosition(position: Position): boolean {
+  // Check if all string fields are empty
+  return Object.entries(position).every(([key, value]) => {
+    // Skip location and contact objects
+    if (key === 'location' || key === 'contact') {
+      return true;
+    }
+    // Check if string value is empty
+    return typeof value === 'string' && value.trim() === '';
+  });
 }
 
 (async () => {
@@ -189,13 +204,11 @@ async function isLastPage(nextPageButton: Locator): Promise<boolean> {
       },
     );
 
-    // positions.forEach(position => {
-    //   console.log(position);
-    // });
-
-    data.push(...positions);
-
-    // break; // testing
+    // Filter out empty positions before adding to data array
+    const nonEmptyPositions = positions.filter(position => !isEmptyPosition(position));
+    console.log(`Filtered out ${positions.length - nonEmptyPositions.length} empty positions`);
+    
+    data.push(...nonEmptyPositions);
 
     // Go to next page
     await nextPageButton.click();
@@ -215,5 +228,4 @@ async function isLastPage(nextPageButton: Locator): Promise<boolean> {
       .then((_) => console.log("Data saved successfully"))
       .catch(console.error);
   }
-  
 })();

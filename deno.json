@@ -1,6 +1,7 @@
 {
   "tasks": {
-    "dev": "deno run --watch main.ts"
+    "scrape": "deno run -A scrape.ts",
+    "db:sync": "deno run -A --env-file ./pocketbase/sync.ts"
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@1",
