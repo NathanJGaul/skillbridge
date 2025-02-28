@@ -1,5 +1,8 @@
 import { BrowserContext, chromium, Locator, Page } from "playwright";
-import { Position, Location } from "./schema.ts";
+import { Position, Location, Contact } from "./schema.ts";
+// import PocketBase from "pocketbase";
+
+// const pb = new PocketBase("http://localhost:8090");
 
 
 async function waitForData(page: Page) {
@@ -81,7 +84,7 @@ async function isLastPage(nextPageButton: Locator): Promise<boolean> {
         return isNaN(parsed) ? defaultValue : parsed;
       }
     
-      function parseShowPinFunction(onclickAttr: string): Location | undefined {
+      function parseShowPinFunction(onclickAttr: string): { location: Location, contact: Contact } | undefined {
         try {
           const showPinRegex = /ShowPin\(([^,]+),([^,]+),["']([^"']+)["'],["']([^"']+)["'],["']([^"']+)["'],["']([^"']+)["'],["']([^"']+)["'],["']([^"']+)["']\)/;
           const match = onclickAttr.match(showPinRegex);
@@ -89,16 +92,23 @@ async function isLastPage(nextPageButton: Locator): Promise<boolean> {
           if (!match || match.length < 9) {
             return undefined;
           }
-          
-          return {
+
+          const location: Location = {
             latitude: parseCoordinate(match[1]),
             longitude: parseCoordinate(match[2]),
             city: match[3] || '',
             state: match[4] || '',
-            zip: match[5] || '',
-            title: match[6] || '',
-            contactName: match[7] || '',
-            contactEmail: match[8] || ''
+            zip: match[5] || ''
+          }
+
+          const contact: Contact = {
+            name: match[7] || '',
+            email: match[8] || ''
+          }
+          
+          return {
+            location: location,
+            contact: contact
           };
         } catch (error) {
           console.error("Error occured:", error);
@@ -118,9 +128,11 @@ async function isLastPage(nextPageButton: Locator): Promise<boolean> {
         
         // Extract location data from ShowPin function if available
         const mapButton = row.querySelector('button.table-map-location');
-        const location = mapButton 
+        const parsedData = mapButton 
           ? parseShowPinFunction(mapButton.getAttribute('onclick') || '')
           : undefined;
+        const location = parsedData?.location;
+        const contact = parsedData?.contact;
         
         // Helper function to safely extract text from cell at given index
         const getCellText = (index: number): string => {
@@ -133,11 +145,11 @@ async function isLastPage(nextPageButton: Locator): Promise<boolean> {
         const position: Position = {
           partnerProgramAgency: getCellText(1),
           service: getCellText(2),
-          city: getCellText(3),
-          state: getCellText(4),
+          // city: getCellText(3),
+          // state: getCellText(4),
           durationOfTraining: getCellText(5),
-          employerPOC: getCellText(6),
-          pocEmail: getCellText(7),
+          // employerPOC: getCellText(6),
+          // pocEmail: getCellText(7),
           cost: getCellText(8),
           closestInstallation: getCellText(9),
           opportunityLocationsByState: getCellText(10),
@@ -154,6 +166,10 @@ async function isLastPage(nextPageButton: Locator): Promise<boolean> {
         // Add location if available
         if (location) {
           position.location = location;
+        }
+
+        if (contact) {
+          position.contact = contact;
         }
         
         return position;
