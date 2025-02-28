@@ -57,11 +57,11 @@ function isEmptyPosition(position: Position): boolean {
   // Check if all string fields are empty
   return Object.entries(position).every(([key, value]) => {
     // Skip location and contact objects
-    if (key === 'location' || key === 'contact') {
+    if (key === "location" || key === "contact") {
       return true;
     }
     // Check if string value is empty
-    return typeof value === 'string' && value.trim() === '';
+    return typeof value === "string" && value.trim() === "";
   });
 }
 
@@ -205,9 +205,15 @@ function isEmptyPosition(position: Position): boolean {
     );
 
     // Filter out empty positions before adding to data array
-    const nonEmptyPositions = positions.filter(position => !isEmptyPosition(position));
-    console.log(`Filtered out ${positions.length - nonEmptyPositions.length} empty positions`);
-    
+    const nonEmptyPositions = positions.filter((position) =>
+      !isEmptyPosition(position)
+    );
+    console.log(
+      `Filtered out ${
+        positions.length - nonEmptyPositions.length
+      } empty positions`,
+    );
+
     data.push(...nonEmptyPositions);
 
     // Go to next page

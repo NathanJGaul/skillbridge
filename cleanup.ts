@@ -13,11 +13,11 @@ function isEmptyObject(obj: Record<string, any>): boolean {
   }
 
   // Check if all values are empty strings or empty objects
-  return Object.values(obj).every(value => {
-    if (typeof value === 'string') {
-      return value === '';
+  return Object.values(obj).every((value) => {
+    if (typeof value === "string") {
+      return value === "";
     }
-    if (typeof value === 'object' && value !== null) {
+    if (typeof value === "object" && value !== null) {
       return isEmptyObject(value);
     }
     return false;
@@ -25,10 +25,14 @@ function isEmptyObject(obj: Record<string, any>): boolean {
 }
 
 // Filter out empty objects
-const cleanedData = data.filter((item: Record<string, any>) => !isEmptyObject(item));
+const cleanedData = data.filter((item: Record<string, any>) =>
+  !isEmptyObject(item)
+);
 
-console.log(`Removed ${data.length - cleanedData.length} empty objects from data.json`);
+console.log(
+  `Removed ${data.length - cleanedData.length} empty objects from data.json`,
+);
 
 // Write the cleaned data back to data.json
 await Deno.writeTextFile(dataPath, JSON.stringify(cleanedData, null, 2));
-console.log('Cleanup complete!');
+console.log("Cleanup complete!");
