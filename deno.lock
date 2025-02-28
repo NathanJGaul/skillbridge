@@ -4,7 +4,8 @@
     "jsr:@std/assert@1": "1.0.11",
     "jsr:@std/internal@^1.0.5": "1.0.5",
     "npm:playwright@*": "1.50.1",
-    "npm:playwright@^1.50.1": "1.50.1"
+    "npm:playwright@^1.50.1": "1.50.1",
+    "npm:pocketbase@~0.25.1": "0.25.1"
   },
   "jsr": {
     "@std/assert@1.0.11": {
@@ -30,12 +31,16 @@
         "fsevents",
         "playwright-core"
       ]
+    },
+    "pocketbase@0.25.1": {
+      "integrity": "sha512-2IH0KLI/qMNR/E17C7BGWX2FxW7Tead+igLHOWZ45P56v/NyVT18Jnmddeft+3qWWGL1Hog2F8bc4orWV/+Fcg=="
     }
   },
   "workspace": {
     "dependencies": [
       "jsr:@std/assert@1",
-      "npm:playwright@^1.50.1"
+      "npm:playwright@^1.50.1",
+      "npm:pocketbase@~0.25.1"
     ]
   }
 }
