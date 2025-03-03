@@ -1,1 +1,7 @@
 .env
+
+# Pocketbase
+pocketbase/pb_data/
+
+# macOS
+.DS_Store

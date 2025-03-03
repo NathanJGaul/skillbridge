@@ -1,6 +1,6 @@
 import PocketBase from "pocketbase";
 import config from "../config.ts";
-import { Position } from "../schema.ts";
+import { Position } from "../src/schema.ts";
 
 const superuserClient = new PocketBase(config.pocketbaseUrl);
 

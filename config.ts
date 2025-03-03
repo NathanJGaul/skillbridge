@@ -1,6 +1,6 @@
 const config = {
   enableJsonSave: true,
-  jsonFilePath: "./data.json",
+  jsonFilePath: "./data/data.json",
   pocketbaseUrl: "http://localhost:8090",
 };
 
